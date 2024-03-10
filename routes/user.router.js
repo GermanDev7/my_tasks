@@ -7,18 +7,25 @@ const {
   changePasswordUser,
   createUserSchema,
 } = require('../schemas/user.schema');
+const passport = require('passport');
 const service = new userService();
+const { checkRoles } = require('../middlewares/auth.handler');
 
 const router = express.Router();
 
-router.get('/', async (req, res, next) => {
-  try {
-    const users = await service.find();
-    res.json(users);
-  } catch (error) {
-    next(error);
+router.get(
+  '/',
+  passport.authenticate('jwt', { session: false }),
+  checkRoles('admin'),
+  async (req, res, next) => {
+    try {
+      const users = await service.find();
+      res.json(users);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 router.get(
   '/:id',
@@ -35,6 +42,7 @@ router.get(
 
 router.post(
   '/',
+  passport.authenticate('jwt', { session: false }),
   validatorHandler(createUserSchema, 'body'),
   async (req, res, next) => {
     try {
@@ -49,6 +57,7 @@ router.post(
 router.put(
   '/:id',
   validatorHandler(getUserSchema, 'params'),
+  validatorHandler(updateUserSchema, 'body'),
   async (req, res, next) => {
     try {
       const { id } = req.params;

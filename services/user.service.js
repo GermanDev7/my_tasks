@@ -1,7 +1,6 @@
-const  boom  = require('@hapi/boom');
+const boom = require('@hapi/boom');
 const { models } = require('./../libs/sequelize');
 const bcrypt = require('bcrypt');
-
 
 class userService {
   constructor() {}
@@ -48,7 +47,7 @@ class userService {
     }
   }
   async update(id, changes) {
-    const user = await models.User.findOne(id);
+    const user = await models.User.findByPk(id);
     if (!user) {
       throw boom.notFound('User not found');
     }
@@ -59,13 +58,13 @@ class userService {
     }
 
     const rta = user.update(changes);
-    delete newUser.dataValues.password;
+    delete user.dataValues.password;
     return rta;
   }
   async delete(id) {
-    const user = await models.User.findOne(id);
+    const user = await models.User.findByPk(id);
     await user.destroy();
-    return id;
+    return { message: 'User deleted succesfully', id };
   }
   async changePassword(id, data) {
     try {

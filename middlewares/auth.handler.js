@@ -19,7 +19,6 @@ function checkAdminRoles(req, res, next) {
 }
 
 function checkRoles(...roles) {
-  console.log(roles);
   return (req, res, next) => {
     const user = req.user;
     if (roles.includes(user.role)) {
@@ -29,5 +28,6 @@ function checkRoles(...roles) {
     }
   };
 }
+
 
 module.exports = { checkApiKey, checkAdminRoles, checkRoles };
