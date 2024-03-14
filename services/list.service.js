@@ -8,7 +8,7 @@ class listService {
     const newList = await models.List.create(data);
     return newList;
   }
-  async find(userId) {
+  async find() {
     const lists = await models.List.findAll({
       include: ['tasks'],
     });
@@ -17,7 +17,6 @@ class listService {
   }
   async findOne(id, userId) {
     const list = await models.List.findByPk(id, {
-      where: { userId: userId },
       include: ['tasks'],
     });
     if (!list) {
@@ -28,7 +27,7 @@ class listService {
     }
     return list;
   }
-  async update(id, changes) {
+  async update(id, changes, userId) {
     const list = await models.List.findByPk(id);
     if (!list) {
       throw boom.unauthorized('Unauthorized');
@@ -43,6 +42,10 @@ class listService {
   }
   async delete(id, userId) {
     const list = await models.List.findByPk(id);
+
+    if(!list){
+      throw boom.notFound('List not found');
+    }
     if (list.userId !== userId) {
       throw boom.unauthorized('Unauthorized');
     }

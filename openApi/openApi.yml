@@ -1,0 +1,392 @@
+openapi: 3.1.0
+info:
+  title: Tasks API
+  version: "1.0.0"
+  description: API documentation for the Tasks application.
+paths:
+  api/v1/users:
+    get:
+      summary: Obtener todos los usuarios
+      tags:
+        - Users
+      responses:
+        '200':
+          description: Lista de usuarios
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      summary: Crear un nuevo usuario
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: Usuario creado con éxito
+  api/v1/users/{id}:
+    get:
+      summary: Obtener un usuario por su ID
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID del usuario
+      responses:
+         '200':
+          description: Detalles del usuario solicitado
+          content:
+            application/json:
+                schema:
+                  $ref: '#/components/schemas/User'
+          '404':
+            description: Usuario no encontrado
+    put:
+        summary: Actualizar un usuario existente
+        tags:
+          - Users
+        parameters:
+          - in: path
+            name: id
+            required: true
+            schema:
+              type: integer
+            description: ID del usuario
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        responses:
+          '200':
+            description: Usuario actualizado con éxito
+          '404':
+            description: Usuario no encontrado
+    delete:
+        summary: Eliminar un usuario
+        tags:
+          - Users
+        parameters:
+          - in: path
+            name: id
+            required: true
+            schema:
+              type: integer
+            description: ID del usuario
+        responses:
+          '200':
+            description: Usuario eliminado con éxito
+          '404':
+            description: Usuario no encontrado
+
+    /users/{id}/change-password:
+      put:
+        summary: Cambiar la contraseña de un usuario
+        tags:
+          - Users
+        parameters:
+          - in: path
+            name: id
+            required: true
+            schema:
+              type: integer
+            description: ID del usuario
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  oldPassword:
+                    type: string
+                    format: password
+                  newPassword:
+                    type: string
+                    format: password
+        responses:
+          '200':
+            description: Contraseña actualizada con éxito
+          '400':
+            description: Información de la solicitud incorrecta
+          '401':
+            description: No autorizado
+          '404':
+            description: Usuario no encontrado
+
+  api/v1/lists:
+    get:
+      summary: Obtener todas las listas
+      tags:
+        - Lists
+      responses:
+        '200':
+          description: Lista de todas las listas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/List'
+    post:
+      summary: Crear una nueva lista
+      tags:
+        - Lists
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/List'
+      responses:
+        '201':
+          description: Lista creada con éxito
+  api/v1/lists/{id}:
+    get:
+      summary: Obtener una lista por su ID
+      tags:
+        - Lists
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID de la lista a obtener
+      responses:
+        '200':
+          description: Detalles de la lista
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/List'
+        '404':
+          description: Lista no encontrada
+    put:
+      summary: Actualizar una lista existente
+      tags:
+        - Lists
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID de la lista a actualizar
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/List'
+      responses:
+        '200':
+          description: Lista actualizada con éxito
+    delete:
+      summary: Eliminar una lista
+      tags:
+        - Lists
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID de la lista a eliminar
+      responses:
+        '200':
+          description: Lista eliminada con éxito
+
+  api/v1/tasks:
+    get:
+        summary: Lista todas las tareas
+        tags:
+          - Tasks
+        responses:
+          '200':
+            description: Una lista de tareas
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Task'
+    post:
+        summary: Crea una nueva tarea
+        tags:
+          - Tasks
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        responses:
+          '201':
+            description: Tarea creada con éxito
+  api/v1/tasks/{id}:
+    get:
+        summary: Obtiene una tarea por ID
+        tags:
+          - Tasks
+        parameters:
+          - in: path
+            name: id
+            required: true
+            schema:
+              type: integer
+            description: ID de la tarea
+        responses:
+          '200':
+            description: Detalles de la tarea solicitada
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Task'
+          '404':
+            description: Tarea no encontrada
+
+    put:
+        summary: Actualiza una tarea existente
+        tags:
+          - Tasks
+        parameters:
+          - in: path
+            name: id
+            required: true
+            schema:
+              type: integer
+            description: ID de la tarea
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        responses:
+          '200':
+            description: Tarea actualizada con éxito
+          '404':
+            description: Tarea no encontrada
+
+    delete:
+        summary: Elimina una tarea
+        tags:
+         - Tasks
+        parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID de la tarea
+        responses:
+          '200':
+            description: Tarea eliminada con éxito
+          '404':
+            description: Tarea no encontrada
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+          writeOnly: true
+        role:
+          type: string
+          enum: [user, admin]
+          default: user
+        CreatedAt:
+          type: string
+          format: date-time
+        UpdatedAt:
+          type: string
+          format: date-time
+      example:
+        email: "user@example.com"
+        role: "user"
+
+    List:
+      type: object
+      required:
+        - name
+        - description
+        - date
+        - completed
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+        description:
+          type: string
+        date:
+          type: string
+          format: date-time
+        completed:
+          type: boolean
+        userId:
+          type: integer
+          description: Reference to the user ID
+      example:
+        name: "Shopping List"
+        description: "Weekly groceries"
+        date: "2023-12-31T23:59:59Z"
+        completed: false
+
+    Task:
+      type: object
+      required:
+        - name
+        - initialDate
+        - finalDate
+        - complete
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+        tema:
+          type: string
+        initialDate:
+          type: string
+          format: date-time
+        finalDate:
+          type: string
+          format: date-time
+        complete:
+          type: boolean
+        listId:
+          type: integer
+          description: Reference to the list ID
+      example:
+        name: "Buy milk"
+        tema: "Shopping"
+        initialDate: "2023-12-25T08:00:00Z"
+        finalDate: "2023-12-25T12:00:00Z"
+        complete: false

@@ -18,7 +18,7 @@ router.get(
   checkRoles('admin', 'user'),
   async (req, res, next) => {
     try {
-      const lists = await service.find(req.user.sub);
+      const lists = await service.find();
       res.json(lists);
     } catch (error) {
       next(error);

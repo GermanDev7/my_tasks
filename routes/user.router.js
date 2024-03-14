@@ -29,10 +29,11 @@ router.get(
 
 router.get(
   '/:id',
+  passport.authenticate('jwt', { session: false }),
   validatorHandler(getUserSchema, 'params'),
   async (req, res, next) => {
     try {
-      const user = await service.findOne(req.params.id);
+      const user = await service.findOne(req.params.id, req.user.sub);
       res.json(user);
     } catch (error) {
       next(error);
@@ -56,12 +57,13 @@ router.post(
 
 router.put(
   '/:id',
+  passport.authenticate('jwt', { session: false }),
   validatorHandler(getUserSchema, 'params'),
   validatorHandler(updateUserSchema, 'body'),
   async (req, res, next) => {
     try {
       const { id } = req.params;
-      const userChange = await service.update(id, req.body);
+      const userChange = await service.update(id, req.body, req.user.sub);
       res.json(userChange);
     } catch (error) {
       next(error);
@@ -71,12 +73,13 @@ router.put(
 
 router.delete(
   '/:id',
+  passport.authenticate('jwt', { session: false }),
   validatorHandler(getUserSchema, 'params'),
   async (req, res, next) => {
     try {
-      const user = await service.findOne(req.params.id);
-      const id = await user.destroy();
-      res.json(id);
+      const idUser = await service.delete(req.params.id, req.user.sub);
+
+      res.json({ message: 'User deleted succesfully', id: idUser });
     } catch (error) {
       next(error);
     }
