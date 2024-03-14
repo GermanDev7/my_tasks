@@ -13,7 +13,7 @@ require('dotenv').config({
   path: process.env.NODE_ENV === 'test' ? '.env.test' : '.env',
 });
  const YAML = require('yamljs');
-const swaggerDocument = YAML.load('./openApi/openapi.yml');
+const swaggerDocument = YAML.load(path.join(__dirname, './openApi/openapi.yml'));
 //configuration cors
 
 const whitelist = ['http://localhost:8080', 'https://myapp.co'];
